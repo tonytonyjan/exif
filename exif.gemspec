@@ -6,12 +6,12 @@ require 'exif/version'
 Gem::Specification.new do |spec|
   spec.name          = "exif"
   spec.version       = Exif::VERSION
-  spec.authors       = ["Tony Jian"]
+  spec.authors       = ["Jian Weihang"]
   spec.email         = ["tonytonyjan@gmail.com"]
   spec.extensions    = ["ext/exif/extconf.rb"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Wrapper of libexif}
+  spec.description   = %q{Wrapper of libexif}
+  spec.homepage      = "https://github.com/tonytonyjan/exif"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
