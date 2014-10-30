@@ -109,7 +109,6 @@ static VALUE process_value(VALUE *self_ptr, ExifTag tag, char *buf){
   case EXIF_TAG_DATE_TIME_ORIGINAL:
   case EXIF_TAG_DATE_TIME_DIGITIZED:
   {
-    int i;
     struct tm timer;
     // "2013:09:10 16:31:21"
     buf[4] = buf[7] = buf[10] = buf[13] = buf[16] = '\0';
