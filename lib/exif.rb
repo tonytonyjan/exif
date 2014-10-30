@@ -1,5 +1,6 @@
-require "exif/version"
-require "exif/exif"
+require 'exif/version'
+require 'exif/underscore'
+require 'exif/exif'
 
 module Exif
 end
