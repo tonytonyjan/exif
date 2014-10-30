@@ -15,6 +15,7 @@ void init_data(){
   int length = sizeof(attrs) / sizeof(char*);
   for(int i = 0; i < length; ++i) rb_define_attr(rb_cData, attrs[i], 1, 0);
   rb_define_attr(rb_cData, "contents", 1, 0);
+  rb_define_alias(rb_cData, "to_h", "contents");
   rb_define_singleton_method(rb_cData, "new", rb_new, 1);
   rb_define_method(rb_cData, "dump", rb_dump, 0);
   rb_define_method(rb_cData, "[]", rb_value, 1);

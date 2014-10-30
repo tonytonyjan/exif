@@ -6,7 +6,7 @@ require 'exifr'
 N = 500
 FILE_PATH = File.expand_path('../../spec/sample.jpg', __FILE__)
 exifr = EXIFR::JPEG.new(FILE_PATH)
-exif  = Struct.new(:image_width).new(123)#Exif::Data.new(FILE_PATH)
+exif  = Exif::Data.new(FILE_PATH)
 Benchmark.bmbm do |x|
   x.report '[exifr] init' do
     N.times{ EXIFR::JPEG.new(FILE_PATH).width }
