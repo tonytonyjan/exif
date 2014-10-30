@@ -94,14 +94,14 @@ static void each_entry(ExifEntry *ee, void *self_ptr){
     value = rb_float_new(atof(buf));
     break;
   default:
-    value = process_value(self, ee->tag, buf);
+    value = process_value(self, ifd, ee->tag, buf);
   }
   rb_hash_aset(rb_hash_aref(rb_contents, IFD2SYM[ifd]), tag_name, value);
   rb_hash_aset(rb_contents, tag_name, value);
   rb_iv_set(*self, attr_name, value);
 }
 
-static VALUE process_value(VALUE *self_ptr, ExifTag tag, char *buf){
+static VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf){
   ExifData *ed;
   Data_Get_Struct(*self_ptr, ExifData, ed);
   switch((int)tag){
@@ -121,9 +121,10 @@ static VALUE process_value(VALUE *self_ptr, ExifTag tag, char *buf){
     return rb_time_new(mktime(&timer), 0);
     break;
   }
-  case EXIF_TAG_GPS_LATITUDE:
-  case EXIF_TAG_GPS_LONGITUDE:
+  case EXIF_TAG_GPS_LATITUDE:  // EXIF_TAG_INTEROPERABILITY_INDEX
+  case EXIF_TAG_GPS_LONGITUDE: // EXIF_TAG_INTEROPERABILITY_VERSION
   {
+    if(ifd != EXIF_IFD_GPS) break;
     char *l = buf, *r = buf + 1;
     double degrees, minutes, seconds;
     // "121, 30.7476,  0"
@@ -140,10 +141,9 @@ static VALUE process_value(VALUE *self_ptr, ExifTag tag, char *buf){
     double degree = (degrees * 3600 + minutes * 60 + seconds) / 3600;
     if(ref_value == 'S' || ref_value == 'W') degree *= -1;
     return rb_float_new(degree);
+  }    
   }
-  default:
-    return rb_str_new_cstr(buf);
-  }
+  return rb_str_new_cstr(buf);
 }
 
 static char* attr_string(ExifIfd ifd, ExifTag tag){
