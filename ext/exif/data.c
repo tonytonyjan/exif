@@ -102,7 +102,7 @@ static void each_entry(ExifEntry *ee, void *self_ptr){
 }
 
 static VALUE process_value(ExifTag tag, char *buf){
-  switch(tag){
+  switch((int)tag){
   case EXIF_TAG_DATE_TIME:
   case EXIF_TAG_DATE_TIME_ORIGINAL:
   case EXIF_TAG_DATE_TIME_DIGITIZED:
@@ -119,6 +119,21 @@ static VALUE process_value(ExifTag tag, char *buf){
     timer.tm_sec  = atoi(buf + 17);
     return rb_time_new(mktime(&timer), 0);
     break;
+  }
+  case EXIF_TAG_GPS_LATITUDE:
+  case EXIF_TAG_GPS_LONGITUDE:
+  {
+    char *l = buf, *r = buf + 1;
+    double degrees, minutes, seconds;
+    // "121, 30.7476,  0"
+    while(*r != ',') r++;
+    *r = '\0'; r++;
+    degrees = atof(l); l = r;
+    while(*r != ',') r++;
+    *r = '\0';
+    minutes = atof(l); l = r + 1;
+    seconds = atof(l);
+    return rb_float_new((degrees * 3600 + minutes * 60 + seconds) / 3600);
   }
   default:
     return rb_str_new_cstr(buf);
