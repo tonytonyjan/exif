@@ -5,9 +5,9 @@ describe Exif do
     @data = Exif::Data.new(File.expand_path('../sample.jpg', __FILE__))
   end
 
-  it '#dump' do
-    expect { @data.dump }.not_to raise_error
-  end
+  # it '#dump' do
+  #   expect { @data.dump }.not_to raise_error
+  # end
 
   it 'works' do
     expect(@data.contents[0][:image_width]).to eq 4000
