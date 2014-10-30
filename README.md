@@ -1,6 +1,6 @@
-# Exif
+# EXIF
 
-Ruby wrapper for libexif
+C Extension in Ruby for reading EXIF data in JPG files.
 
 # Installation
 
