@@ -6,6 +6,8 @@ Ruby wrapper for libexif
 
     $ gem install exif
 
+Please make sure you have installed `libexif` first.
+
 # Usage
 
 ```ruby
@@ -20,6 +22,38 @@ data[:exif]             # => exposure_time: "1/125 sec.", f_number: "f/8.0"}
 data[:gps]              # => {gps_version_id: "2.2.0.0", gps_latitude_ref: "N", ...}
 data[:interoperability] # => {...}
 data.to_h               # => {0 => {...}, 1 => {...}, :exif => {...}}
+```
+
+# How fast?
+
+There is another excellent work called [exifr](https://github.com/remvee/exifr) made by [@remvee](https://github.com/remvee). That's pure Ruby while this one is C extension. If you program JRuby, you may want to choose exifr, otherwise you can try this gem for speed purpose, it's about 8 times faster. A small benchmark shows below:
+
+```ruby
+require 'benchmark'
+require 'exif'
+require 'exifr'
+N = 500
+FILE_PATH = 'sample.jpg'
+Benchmark.bmbm do |x|
+  x.report '[exifr] init' do
+    N.times{ EXIFR::JPEG.new(FILE_PATH).width }
+  end
+  x.report '[exif]  init' do
+    N.times{ Exif::Data.new(FILE_PATH).image_width }
+  end
+end
+```
+
+```
+$ ruby benchmark/benchmark.rb
+Rehearsal ------------------------------------------------
+[exifr] init   0.810000   0.020000   0.830000 (  0.840701)
+[exif]  init   0.090000   0.010000   0.100000 (  0.099700)
+--------------------------------------- total: 0.930000sec
+
+                   user     system      total        real
+[exifr] init   0.810000   0.020000   0.830000 (  0.830644)
+[exif]  init   0.090000   0.010000   0.100000 (  0.095148)
 ```
 
 ## Tag Rreference
