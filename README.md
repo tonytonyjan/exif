@@ -174,5 +174,4 @@ data[:interoperability] # => {...}
 
 # TODO
 
-1. `Exif.underscore!` is too slow
-2. Support reading from String.
+1. Support reading from String.
