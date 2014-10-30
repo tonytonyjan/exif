@@ -1,6 +1,4 @@
-# EXIF
-
-C Extension in Ruby for reading EXIF data in JPG files.
+Ruby EXIF reader written in C extension.
 
 # Installation
 

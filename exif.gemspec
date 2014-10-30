@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Jian Weihang"]
   spec.email         = ["tonytonyjan@gmail.com"]
   spec.extensions    = ["ext/exif/extconf.rb"]
-  spec.summary       = %q{Wrapper of libexif}
-  spec.description   = %q{Wrapper of libexif}
+  spec.summary       = %q{Ruby EXIF reader written in C extension.}
+  spec.description   = %q{Ruby EXIF reader written in C extension.}
   spec.homepage      = "https://github.com/tonytonyjan/exif"
   spec.license       = "MIT"
 
