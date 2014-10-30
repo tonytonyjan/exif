@@ -17,7 +17,7 @@ data.gps_latitude # => '24, 10.6817,  0'
 
 # get all entries in an IFD
 data[0]                 # => {image_width: 4000, image_length: 2670, ...}
-data[1]                 # => {x_resolution: "72"}, y_resolution: "72", ...}
+data[1]                 # => {x_resolution: "72", y_resolution: "72", ...}
 data[:exif]             # => exposure_time: "1/125 sec.", f_number: "f/8.0"}
 data[:gps]              # => {gps_version_id: "2.2.0.0", gps_latitude_ref: "N", ...}
 data[:interoperability] # => {...}
