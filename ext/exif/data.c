@@ -1,4 +1,5 @@
 #include <libexif/exif-data.h>
+#include <time.h>
 #include "data.h"
 
 extern VALUE rb_mExif;
@@ -93,11 +94,35 @@ static void each_entry(ExifEntry *ee, void *self_ptr){
     value = rb_float_new(atof(buf));
     break;
   default:
-    value = rb_str_new_cstr(buf);
+    value = process_value(ee->tag, buf);
   }
   rb_hash_aset(rb_hash_aref(rb_contents, IFD2SYM[ifd]), tag_name, value);
   rb_hash_aset(rb_contents, tag_name, value);
   rb_iv_set(*self, attr_name, value);
+}
+
+static VALUE process_value(ExifTag tag, char *buf){
+  switch(tag){
+  case EXIF_TAG_DATE_TIME:
+  case EXIF_TAG_DATE_TIME_ORIGINAL:
+  case EXIF_TAG_DATE_TIME_DIGITIZED:
+  {
+    int i;
+    struct tm timer;
+    // "2013:09:10 16:31:21"
+    buf[4] = buf[7] = buf[10] = buf[13] = buf[16] = '\0';
+    timer.tm_year = atoi(buf) - 1900;
+    timer.tm_mon  = atoi(buf + 5) - 1;
+    timer.tm_mday = atoi(buf + 8);
+    timer.tm_hour = atoi(buf + 11);
+    timer.tm_min  = atoi(buf + 14);
+    timer.tm_sec  = atoi(buf + 17);
+    return rb_time_new(mktime(&timer), 0);
+    break;
+  }
+  default:
+    return rb_str_new_cstr(buf);
+  }
 }
 
 static char* attr_string(ExifIfd ifd, ExifTag tag){
