@@ -10,8 +10,10 @@ Please make sure you have installed `libexif` first.
 
 ```ruby
 data = Exif::Data.new('sample.jpg')
+data.model        # => "NIKON D600"
 data.image_width  # => 4000
-data.gps_latitude # => '24, 10.6817,  0'
+data.gps_longitude # => 121.51246
+data.date_time    # => 2013-12-08 21:14:11 0800
 
 # get all entries in an IFD
 data[0]                 # => {image_width: 4000, image_length: 2670, ...}
