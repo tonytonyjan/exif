@@ -14,7 +14,7 @@ static VALUE rb_value(VALUE self, VALUE key);
 
 static void each_content(ExifContent *ec, void *user_data);
 static void each_entry(ExifEntry *, void *user_data);
-static VALUE process_value(ExifTag tag, char *buf);
+static VALUE process_value(VALUE *self_ptr, ExifTag tag, char *buf);
 static char* attr_string(ExifIfd ifd, ExifTag tag);
 
 #endif /* DATA_H */

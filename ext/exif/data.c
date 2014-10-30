@@ -94,14 +94,16 @@ static void each_entry(ExifEntry *ee, void *self_ptr){
     value = rb_float_new(atof(buf));
     break;
   default:
-    value = process_value(ee->tag, buf);
+    value = process_value(self, ee->tag, buf);
   }
   rb_hash_aset(rb_hash_aref(rb_contents, IFD2SYM[ifd]), tag_name, value);
   rb_hash_aset(rb_contents, tag_name, value);
   rb_iv_set(*self, attr_name, value);
 }
 
-static VALUE process_value(ExifTag tag, char *buf){
+static VALUE process_value(VALUE *self_ptr, ExifTag tag, char *buf){
+  ExifData *ed;
+  Data_Get_Struct(*self_ptr, ExifData, ed);
   switch((int)tag){
   case EXIF_TAG_DATE_TIME:
   case EXIF_TAG_DATE_TIME_ORIGINAL:
@@ -133,7 +135,12 @@ static VALUE process_value(ExifTag tag, char *buf){
     *r = '\0';
     minutes = atof(l); l = r + 1;
     seconds = atof(l);
-    return rb_float_new((degrees * 3600 + minutes * 60 + seconds) / 3600);
+    ExifTag ref_tag = tag == EXIF_TAG_GPS_LATITUDE ? EXIF_TAG_GPS_LATITUDE_REF : EXIF_TAG_GPS_LONGITUDE_REF;
+    ExifEntry *entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS], ref_tag);
+    char ref_value; exif_entry_get_value(entry, &ref_value, 1);
+    double degree = (degrees * 3600 + minutes * 60 + seconds) / 3600;
+    if(ref_value == 'S' || ref_value == 'W') degree *= -1;
+    return rb_float_new(degree);
   }
   default:
     return rb_str_new_cstr(buf);
