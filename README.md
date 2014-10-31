@@ -4,7 +4,10 @@ Ruby EXIF reader written in C extension.
 
     $ gem install exif
 
-Please make sure you have installed `libexif` first.
+Please make sure you have installed `libexif` first:
+
+    $ brew install libexif             # Homebrew
+    $ sudo apt-get install libexif-dev # APT
 
 # Usage
 
@@ -26,7 +29,11 @@ data.to_h               # => {0 => {...}, 1 => {...}, :exif => {...}}
 
 # How fast?
 
-There is another excellent work called [exifr](https://github.com/remvee/exifr) made by [@remvee](https://github.com/remvee). That's pure Ruby while this one is C extension. If you program JRuby, you may want to choose exifr, otherwise you can try this gem for speed purpose, it's about 8 times faster. A small benchmark shows below:
+There are some other excellent works called [exifr](https://github.com/remvee/exifr) by [@remvee](https://github.com/remvee), and [mini_exiftool](https://github.com/janfri/mini_exiftool) by [@janfri](https://github.com/janfri). They're built in pure Ruby while this one is C extension.
+
+If you program JRuby, you may want to choose exifr or mini_exiftool, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) written by Phil Harvey since it's a command-line wrapper, otherwise you can try this gem for speed purpose. **It's about 8 times faster than exifr and 1200 times than that of mini_exiftool.**
+
+A small benchmark shows below:
 
 ```ruby
 require 'benchmark'
