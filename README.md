@@ -30,15 +30,20 @@ There is another excellent work called [exifr](https://github.com/remvee/exifr) 
 
 ```ruby
 require 'benchmark'
-require 'exif'
+require 'mini_exiftool'
 require 'exifr'
-N = 500
-FILE_PATH = 'sample.jpg'
+require 'exif'
+
+N = 50
+FILE_PATH = File.expand_path('../../spec/sample.jpg', __FILE__)
 Benchmark.bmbm do |x|
-  x.report '[exifr] init' do
+  x.report 'mini_exiftool' do
+    N.times{ MiniExiftool.new(FILE_PATH).image_width }
+  end
+  x.report 'exifr' do
     N.times{ EXIFR::JPEG.new(FILE_PATH).width }
   end
-  x.report '[exif]  init' do
+  x.report 'exif' do
     N.times{ Exif::Data.new(FILE_PATH).image_width }
   end
 end
@@ -46,14 +51,15 @@ end
 
 ```
 $ ruby benchmark/benchmark.rb
-Rehearsal ------------------------------------------------
-[exifr] init   0.810000   0.020000   0.830000 (  0.840701)
-[exif]  init   0.090000   0.010000   0.100000 (  0.099700)
---------------------------------------- total: 0.930000sec
-
-                   user     system      total        real
-[exifr] init   0.810000   0.020000   0.830000 (  0.830644)
-[exif]  init   0.090000   0.010000   0.100000 (  0.095148)
+Rehearsal -------------------------------------------------
+mini_exiftool   0.150000   0.050000  12.390000 ( 12.546417)
+exifr           0.090000   0.000000   0.090000 (  0.091090)
+exif            0.010000   0.000000   0.010000 (  0.010343)
+--------------------------------------- total: 12.490000sec
+                    user     system      total        real
+mini_exiftool   0.150000   0.050000  12.400000 ( 12.540122)
+exifr           0.080000   0.000000   0.080000 (  0.083251)
+exif            0.010000   0.000000   0.010000 (  0.009855)
 ```
 
 ## Tag Rreference
