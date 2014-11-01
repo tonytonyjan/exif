@@ -223,3 +223,4 @@ exif            0.010000   0.000000   0.010000 (  0.009855)
 # TODO
 
 1. Support reading from String.
+2. Create, update and delete tags.
