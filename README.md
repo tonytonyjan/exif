@@ -1,4 +1,4 @@
-Ruby EXIF reader written in C extension.
+Ruby EXIF reader written in C extension. [![Build Status](https://travis-ci.org/tonytonyjan/exif.svg?branch=master)](https://travis-ci.org/tonytonyjan/exif)
 
 # Installation
 
