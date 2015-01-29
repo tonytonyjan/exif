@@ -8,4 +8,4 @@ end
 
 RSpec::Core::RakeTask.new(:spec)
 
-task default: %i[compile spec]
+task default: [:compile, :spec]
