@@ -59,7 +59,7 @@ static void each_entry(ExifEntry *ee, void *self_ptr){
   VALUE *self = (VALUE*)self_ptr;
   VALUE rb_contents = rb_iv_get(*self, "@contents");
   ExifIfd ifd = exif_entry_get_ifd(ee);
-  char *attr_name = attr_string(ifd, ee->tag);
+  const char *attr_name = attr_string(ifd, ee->tag);
   VALUE tag_name = ID2SYM(rb_intern(attr_name + 1));
   char buf[500];
   exif_entry_get_value(ee, buf, sizeof(buf));
@@ -146,7 +146,7 @@ static VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf)
   return rb_str_new_cstr(buf);
 }
 
-static char* attr_string(ExifIfd ifd, ExifTag tag){
+static const char* attr_string(ExifIfd ifd, ExifTag tag){
   switch((int)tag){
   case EXIF_TAG_INTEROPERABILITY_INDEX: /* EXIF_TAG_GPS_LATITUDE_REF */
     return ifd == EXIF_IFD_GPS ? "@gps_latitude_ref" : "@interoperability_index";
