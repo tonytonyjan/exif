@@ -8,13 +8,13 @@ static const char *attrs[] = {"aperture_value", "artist", "battery_level", "bits
 
 void init_data();
 
-static VALUE rb_new(VALUE self, VALUE file_path);
-static VALUE rb_dump(VALUE self);
-static VALUE rb_value(VALUE self, VALUE key);
+VALUE rb_new(VALUE self, VALUE file_path);
+VALUE rb_dump(VALUE self);
+VALUE rb_value(VALUE self, VALUE key);
 
-static void each_content(ExifContent *ec, void *user_data);
-static void each_entry(ExifEntry *, void *user_data);
-static VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf);
-static const char* attr_string(ExifIfd ifd, ExifTag tag);
+void each_content(ExifContent *ec, void *user_data);
+void each_entry(ExifEntry *, void *user_data);
+VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf);
+const char* attr_string(ExifIfd ifd, ExifTag tag);
 
 #endif /* DATA_H */

@@ -22,7 +22,7 @@ void init_data(){
   rb_define_method(rb_cData, "[]", rb_value, 1);
 }
 
-static VALUE rb_new(VALUE self, VALUE file_path){
+VALUE rb_new(VALUE self, VALUE file_path){
   Check_Type(file_path, T_STRING);
   ExifData *ed = exif_data_new_from_file(StringValueCStr(file_path));
   if(!ed) rb_raise(rb_eRuntimeError, "File not readable or no EXIF data in file.");
@@ -32,19 +32,19 @@ static VALUE rb_new(VALUE self, VALUE file_path){
   return rb_data;
 }
 
-static VALUE rb_dump(VALUE self){
+VALUE rb_dump(VALUE self){
   ExifData *ed;
   Data_Get_Struct(self, ExifData, ed);
   exif_data_dump(ed);
   return Qnil;
 }
 
-static VALUE rb_value(VALUE self, VALUE key){
+VALUE rb_value(VALUE self, VALUE key){
   VALUE rb_contents = rb_iv_get(self, "@contents");
   return rb_hash_aref(rb_contents, key);
 }
 
-static void each_content(ExifContent *ec, void *self_ptr){
+void each_content(ExifContent *ec, void *self_ptr){
   VALUE *self = (VALUE*)self_ptr;
   VALUE rb_contents = rb_iv_get(*self, "@contents");
   Check_Type(rb_contents, T_HASH);
@@ -55,7 +55,7 @@ static void each_content(ExifContent *ec, void *self_ptr){
   exif_content_foreach_entry(ec, each_entry, self);
 }
 
-static void each_entry(ExifEntry *ee, void *self_ptr){
+void each_entry(ExifEntry *ee, void *self_ptr){
   VALUE *self = (VALUE*)self_ptr;
   VALUE rb_contents = rb_iv_get(*self, "@contents");
   ExifIfd ifd = exif_entry_get_ifd(ee);
@@ -101,7 +101,7 @@ static void each_entry(ExifEntry *ee, void *self_ptr){
   rb_iv_set(*self, attr_name, value);
 }
 
-static VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf){
+VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf){
   ExifData *ed;
   Data_Get_Struct(*self_ptr, ExifData, ed);
   switch((int)tag){
@@ -146,7 +146,7 @@ static VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf)
   return rb_str_new_cstr(buf);
 }
 
-static const char* attr_string(ExifIfd ifd, ExifTag tag){
+const char* attr_string(ExifIfd ifd, ExifTag tag){
   switch((int)tag){
   case EXIF_TAG_INTEROPERABILITY_INDEX: /* EXIF_TAG_GPS_LATITUDE_REF */
     return ifd == EXIF_IFD_GPS ? "@gps_latitude_ref" : "@interoperability_index";
