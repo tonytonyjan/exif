@@ -2,7 +2,7 @@
 #include <time.h>
 #include "data.h"
 
-extern VALUE rb_mExif;
+extern VALUE rb_mExif, rb_eNotReadble, rb_eIFDNotFound;
 VALUE rb_cData;
 static VALUE IFD2SYM[5];
 
@@ -25,7 +25,7 @@ void init_data(){
 VALUE rb_new(VALUE self, VALUE file_path){
   Check_Type(file_path, T_STRING);
   ExifData *ed = exif_data_new_from_file(StringValueCStr(file_path));
-  if(!ed) rb_raise(rb_eRuntimeError, "File not readable or no EXIF data in file.");
+  if(!ed) rb_raise(rb_eNotReadble, "File not readable or no EXIF data in file.");
   VALUE rb_data = Data_Wrap_Struct(self, NULL, exif_data_free, ed);
   rb_iv_set(rb_data, "@contents", rb_hash_new());
   exif_data_foreach_content(ed, each_content, &rb_data);
@@ -50,7 +50,7 @@ void each_content(ExifContent *ec, void *self_ptr){
   Check_Type(rb_contents, T_HASH);
   ExifIfd ifd = exif_content_get_ifd(ec);
   VALUE ifd_name = IFD2SYM[ifd]; //rb_str_new_cstr(exif_ifd_get_name(ifd));
-  if(ifd == EXIF_IFD_COUNT) rb_raise(rb_eRuntimeError, "Con't get IFD.");
+  if(ifd == EXIF_IFD_COUNT) rb_raise(rb_eIFDNotFound, "Con't get IFD.");
   else rb_hash_aset(rb_contents, ifd_name, rb_hash_new());
   exif_content_foreach_entry(ec, each_entry, self);
 }

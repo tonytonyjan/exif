@@ -1,5 +1,5 @@
 require 'exif/version'
-require 'exif/exif'
+require 'exif_ext'
 
 module Exif
 end
