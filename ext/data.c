@@ -133,7 +133,7 @@ VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf){
     degrees = atof(l); l = r;
     while(*r != ',') r++;
     *r = '\0';
-    minutes = atof(l); l = r + 1;
+    minutes = atof(l); l = r;
     seconds = atof(l);
     ExifTag ref_tag = tag == EXIF_TAG_GPS_LATITUDE ? EXIF_TAG_GPS_LATITUDE_REF : EXIF_TAG_GPS_LONGITUDE_REF;
     ExifEntry *entry = exif_content_get_entry(ed->ifd[EXIF_IFD_GPS], ref_tag);
