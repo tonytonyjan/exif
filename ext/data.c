@@ -52,7 +52,6 @@ void each_content(ExifContent *ec, void *self_ptr){
 }
 
 void each_entry(ExifEntry *entry, void *self_ptr){
-  exif_entry_dump(entry, 2);
   VALUE *self, value;
   const char *ivar_name;
 
