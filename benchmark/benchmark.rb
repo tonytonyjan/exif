@@ -17,3 +17,5 @@ Benchmark.bmbm do |x|
     N.times{ Exif::Data.new(FILE_PATH).image_width }
   end
 end
+
+puts Time.now.utc
