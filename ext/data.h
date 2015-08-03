@@ -10,11 +10,5 @@ void init_data();
 
 VALUE rb_new(VALUE self, VALUE file_path);
 VALUE rb_dump(VALUE self);
-VALUE rb_value(VALUE self, VALUE key);
-
-void each_content(ExifContent *ec, void *user_data);
-void each_entry(ExifEntry *, void *user_data);
-VALUE exif_entry_to_value(ExifEntry *);
-VALUE process_value(VALUE *self_ptr, ExifIfd ifd, ExifTag tag, char *buf);
 
 #endif /* DATA_H */

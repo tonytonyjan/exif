@@ -2,10 +2,14 @@
 #include <time.h>
 #include "data.h"
 
-extern VALUE rb_mExif, rb_eNotReadble, rb_eIFDNotFound, rb_eUnknownDataType;
+extern VALUE rb_mExif, rb_eError, rb_eNotReadble, rb_eIFDNotFound, rb_eUnknownDataType;
 extern const char* exif_entry_to_ivar(ExifEntry* entry);
 
 VALUE rb_cData;
+
+static void each_content(ExifContent *ec, void *user_data);
+static void each_entry(ExifEntry *, void *user_data);
+static VALUE exif_entry_to_value(ExifEntry *);
 
 void init_data(){
   int length;
@@ -70,6 +74,7 @@ VALUE exif_entry_to_value(ExifEntry *entry){
   VALUE ret;
   int i;
   unsigned char size;
+  struct tm tm = {};
 
   data = entry->parent->parent;
   order = exif_data_get_byte_order(data);
@@ -78,7 +83,21 @@ VALUE exif_entry_to_value(ExifEntry *entry){
 
   switch(entry->format){
   case EXIF_FORMAT_ASCII:
-    ret = rb_str_new2((const char *)entry->data);
+    switch((int)entry->tag){
+    case EXIF_TAG_DATE_TIME:
+    case EXIF_TAG_DATE_TIME_ORIGINAL:
+      if(strptime((const char*)entry->data, "%Y:%m:%d %T", &tm) != NULL)
+        ret = rb_time_new(mktime(&tm), 0);
+      else rb_raise(rb_eError, "wrong date time format");
+      break;
+    case EXIF_TAG_GPS_DATE_STAMP:
+      if(strptime((const char*)entry->data, "%Y:%m:%d", &tm) != NULL)
+        ret = rb_time_new(mktime(&tm), 0);
+      else rb_raise(rb_eError, "wrong date time format");
+      break;
+    default:
+      ret = rb_str_new2((const char *)entry->data);
+    }
     break;
   case EXIF_FORMAT_SHORT:
     if(entry->components > 1){

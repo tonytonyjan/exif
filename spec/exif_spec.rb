@@ -12,7 +12,9 @@ describe Exif do
     expect(data.pixel_x_dimension).to eq 4000
     expect(data.gps_version_id).to eq "\x02\x02\x00\x00"
     expect(data.gps_altitude_ref).to eq "\x00"
-    # expect(data.date_time).to eq Time.new(2013,12,8,21,14,11) TODO
+    expect(data.date_time).to eq Time.new(2013,12,8,21,14,11)
+    expect(data.date_time_original).to eq Time.new(2013,9,10,16,31,21)
+    expect(data.gps_date_stamp).to eq Time.new(2013,9,10)
   end
 
   it 'raises errors' do
