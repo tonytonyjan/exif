@@ -8,6 +8,7 @@ Please make sure you have installed `libexif` first:
 
     $ brew install libexif             # Homebrew
     $ sudo apt-get install libexif-dev # APT
+    $ sudo yum install libexif-devel   # CentOS
 
 # Usage
 
