@@ -1,4 +1,4 @@
-#include <libexif/exif-data.h>
+#include <libexif/exif-entry.h>
 
 const char* exif_entry_to_ivar(ExifEntry* ee){
   ExifIfd ifd;
