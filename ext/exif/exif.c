@@ -4,7 +4,7 @@
 VALUE rb_mExif, rb_eError, rb_eNotReadble, rb_eIFDNotFound, rb_eUnknownDataType;
 
 
-void Init_exif_ext(void){
+void Init_exif(void){
   rb_mExif = rb_define_module("Exif");
 
   rb_eError = rb_define_class_under(rb_mExif, "Error", rb_eStandardError);
