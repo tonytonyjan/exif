@@ -1,5 +1,7 @@
-require "rake/extensiontask"
-require "rake/testtask"
+# frozen_string_literal: true
+
+require 'rake/extensiontask'
+require 'rake/testtask'
 
 Rake::ExtensionTask.new 'exif' do |ext|
   ext.lib_dir = "lib/#{ext.name}"
