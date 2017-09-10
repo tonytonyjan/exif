@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lib/exif/version'
+require File.expand_path('../lib/exif/version', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name          = 'exif'

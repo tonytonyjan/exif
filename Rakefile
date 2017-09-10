@@ -12,6 +12,7 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-Gem::PackageTask.new(Gem::Specification.load("#{__dir__}/exif.gemspec")).define
+spec = Gem::Specification.load(File.expand_path('..//exif.gemspec', __FILE__))
+Gem::PackageTask.new(spec).define
 
-task default: %i[compile test]
+task default: [:compile, :test]
