@@ -1,6 +1,3 @@
-#ifndef DATA_H
-#define DATA_H 1
+#pragma once
 
 void init_data();
-
-#endif /* DATA_H */

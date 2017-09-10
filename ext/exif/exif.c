@@ -1,8 +1,7 @@
-#include "exif.h"
+#include "ruby.h"
 #include "data.h"
 
 VALUE rb_mExif, rb_eError, rb_eNotReadble, rb_eIFDNotFound, rb_eUnknownDataType;
-
 
 void Init_exif(void){
   rb_mExif = rb_define_module("Exif");
