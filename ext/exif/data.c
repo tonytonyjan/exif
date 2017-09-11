@@ -26,6 +26,7 @@ void init_data(){
   rb_cData = rb_define_class_under(rb_mExif, "Data", rb_cObject);
   length = sizeof(attr_readers) / sizeof(char*);
   for(int i = 0; i < length; ++i) rb_define_attr(rb_cData, attr_readers[i], 1, 0);
+  rb_define_alias(rb_cData, "to_h", "ifds");
   rb_define_singleton_method(rb_cData, "new", new, 1);
   rb_define_method(rb_cData, "dump", dump, 0);
 }

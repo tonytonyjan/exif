@@ -5,6 +5,10 @@ require 'exif'
 
 class TestExif < Minitest::Test
   module Shared
+    def test_to_h
+      assert_equal data.ifds, data.to_h
+    end
+
     def test_ifds
       assert_equal({
         image_width: 4000,
