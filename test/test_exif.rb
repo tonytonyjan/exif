@@ -162,8 +162,8 @@ class TestExif < Minitest::Test
     end
 
     def test_rational
-      # assert_equal Rational(72, 1), data.x_resolution
-      # assert_equal Rational(72, 1), data.y_resolution
+      assert_equal Rational(300, 1), data.x_resolution
+      assert_equal Rational(300, 1), data.y_resolution
       assert_equal Rational(1, 125), data.exposure_time
       assert_equal Rational(8, 1), data.fnumber
       assert_equal Rational(870723, 125000), data.shutter_speed_value

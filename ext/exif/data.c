@@ -96,7 +96,9 @@ static void each_entry(ExifEntry *entry, void *self_ptr){
     ID2SYM(rb_intern(ivar_name + 1)),
     value
   );
-  rb_iv_set(*(VALUE*)self_ptr, ivar_name, value);
+  if(TYPE(rb_ivar_defined(*(VALUE*)self_ptr, rb_intern(ivar_name))) == T_FALSE){
+    rb_iv_set(*(VALUE*)self_ptr, ivar_name, value);
+  }
 }
 
 static VALUE exif_entry_to_rb_value(ExifEntry *entry){
