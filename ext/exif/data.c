@@ -101,7 +101,7 @@ static VALUE exif_entry_to_rb_value(ExifEntry *entry){
 
   switch(entry->format){
   case EXIF_FORMAT_UNDEFINED:
-    ret = Qnil;
+    ret = rb_str_new((const char*)entry->data, entry->size);
     break;
   case EXIF_FORMAT_BYTE:
     if(entry->components > 1){

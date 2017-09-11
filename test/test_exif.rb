@@ -5,6 +5,14 @@ require 'exif'
 
 class TestExif < Minitest::Test
   module Shared
+    def test_undefined
+      assert_equal '0230', data.exif_version
+      assert_equal "\x03", data.file_source
+      assert_equal "\x01", data.scene_type
+      assert_equal "\x02\x00\x02\x00\x00\x01\x01\x02", data.new_cfa_pattern
+      assert_equal '0100', data.flash_pix_version
+    end
+
     def test_byte
       assert_equal 0, data.gps_altitude_ref
       assert_equal [2, 2, 0, 0], data.gps_version_id
