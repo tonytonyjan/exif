@@ -16,6 +16,7 @@ static const char* attr_readers[] = {"ifds", "aperture_value", "artist", "batter
 
 static VALUE new(VALUE self, VALUE input);
 static VALUE dump(VALUE self);
+static VALUE brackets(VALUE self, VALUE ifd_symbol);
 static void each_content(ExifContent *ec, void *user_data);
 static void each_entry(ExifEntry *, void *user_data);
 static VALUE exif_entry_to_rb_value(ExifEntry *);
@@ -29,6 +30,7 @@ void init_data(){
   rb_define_alias(rb_cExifData, "to_h", "ifds");
   rb_define_singleton_method(rb_cExifData, "new", new, 1);
   rb_define_method(rb_cExifData, "dump", dump, 0);
+  rb_define_method(rb_cExifData, "[]", brackets, 1);
 }
 
 VALUE new(VALUE self, VALUE input){
@@ -64,6 +66,10 @@ static VALUE dump(VALUE self){
   Data_Get_Struct(self, ExifData, ed);
   exif_data_dump(ed);
   return Qnil;
+}
+
+static VALUE brackets(VALUE self, VALUE ifd_symbol){
+  return rb_hash_aref(rb_iv_get(self, "@ifds"), ifd_symbol);
 }
 
 static void each_content(ExifContent *ec, void *self_ptr){

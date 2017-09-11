@@ -5,6 +5,14 @@ require 'exif'
 
 class TestExif < Minitest::Test
   module Shared
+    def test_brackets
+      assert_equal data.ifds[:ifd0], data[:ifd0]
+      assert_equal data.ifds[:ifd1], data[:ifd1]
+      assert_equal data.ifds[:exif], data[:exif]
+      assert_equal data.ifds[:gps], data[:gps]
+      assert_equal data.ifds[:interoperability], data[:interoperability]
+    end
+
     def test_to_h
       assert_equal data.ifds, data.to_h
     end
