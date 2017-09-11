@@ -30,47 +30,29 @@ data.to_h               # => {0 => {...}, 1 => {...}, :exif => {...}}
 
 # How fast?
 
-There are some other excellent works called [exifr](https://github.com/remvee/exifr) by [@remvee](https://github.com/remvee), and [mini_exiftool](https://github.com/janfri/mini_exiftool) by [@janfri](https://github.com/janfri). They're built in pure Ruby while this one is C extension.
+**It's approximately 4 times faster than exifr and hundreds of times faster than mini_exiftool.**
 
-If you program JRuby, you may want to choose exifr or mini_exiftool, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) written by Phil Harvey since it's a command-line wrapper, otherwise you can try this gem for speed purpose. **It's about 8 times faster than exifr and 1200 times than that of mini_exiftool.**
+There are similar excellent works called [exifr](https://github.com/remvee/exifr) by [@remvee](https://github.com/remvee), and [mini_exiftool](https://github.com/janfri/mini_exiftool) by [@janfri](https://github.com/janfri). They're built in pure Ruby while this one is C extension.
 
-A small benchmark shows below:
+If you are using JRuby, you might want to take exifr or mini_exiftool a look, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) written by Phil Harvey since it's a command-line wrapper, otherwise you can try this gem for performance purpose.
 
-```ruby
-require 'benchmark'
-require 'mini_exiftool'
-require 'exifr'
-require 'exif'
-
-N = 50
-FILE_PATH = File.expand_path('../../spec/sample.jpg', __FILE__)
-Benchmark.bmbm do |x|
-  x.report 'mini_exiftool' do
-    N.times{ MiniExiftool.new(FILE_PATH).image_width }
-  end
-  x.report 'exifr' do
-    N.times{ EXIFR::JPEG.new(FILE_PATH).width }
-  end
-  x.report 'exif' do
-    N.times{ Exif::Data.new(FILE_PATH).image_width }
-  end
-end
-```
+Below is [the benchmark](benchmark/benchmark.rb):
 
 ```
 $ ruby benchmark/benchmark.rb
-Rehearsal -------------------------------------------------
-mini_exiftool   0.190000   0.050000  12.130000 ( 12.293019)
-exifr           0.080000   0.000000   0.080000 (  0.087728)
-exif            0.010000   0.000000   0.010000 (  0.006422)
---------------------------------------- total: 12.220000sec
+Rehearsal ---------------------------------------------------------
+mini_exiftool (2.8.2)   0.130000   0.070000   9.430000 (  9.683178)
+exifr (1.3.2)           0.070000   0.010000   0.080000 (  0.075245)
+exif (595c354)          0.020000   0.000000   0.020000 (  0.018962)
+------------------------------------------------ total: 9.530000sec
 
-                    user     system      total        real
-mini_exiftool   0.190000   0.050000  12.330000 ( 12.448299)
-exifr           0.080000   0.010000   0.090000 (  0.078003)
-exif            0.010000   0.000000   0.010000 (  0.005781)
-
-2015-08-03 01:15:01 UTC
+                            user     system      total        real
+mini_exiftool (2.8.2)   0.130000   0.070000   9.730000 (  9.991273)
+exifr (1.3.2)           0.070000   0.010000   0.080000 (  0.072604)
+exif (595c354)          0.010000   0.000000   0.010000 (  0.020044)
+-----------------------------------------
+498 times faster than mini_exiftool (2.8.2)
+4 times faster than exifr (1.3.2)
 ```
 
 ## Tag Rreference
