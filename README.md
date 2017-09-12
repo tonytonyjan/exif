@@ -1,6 +1,6 @@
 A Ruby EXIF reader written in C. [![Build Status](https://travis-ci.org/tonytonyjan/exif.svg?branch=master)](https://travis-ci.org/tonytonyjan/exif)
 
-Installation
+# Installation
 
     $ gem install exif
 
@@ -32,14 +32,6 @@ data.ifds == data.to_h  # => true
 
 Since `ifd0` and `ifd1` share the same domain of tags, sometimes the same tag can be both used inside them, in this case, calling top-level API like `Exif::Data#image_width` will return the value of `ifd0`, in other words, `ifd0` has higher priority than `ifd1`.
 
-# How fast?
-
-**It's approximately hundreds of times faster than mini_exiftool and exifr.**
-
-There are similar excellent works like [exifr](https://github.com/remvee/exifr) (by [@remvee](https://github.com/remvee)), and [mini_exiftool](https://github.com/janfri/mini_exiftool) (by [@janfri](https://github.com/janfri)). They are both built in pure Ruby while this one is C extension.
-
-If you are using JRuby, you might want to take exifr or mini_exiftool a look, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) which is written by Phil Harvey since it is a command-line wrapper, otherwise, you can try this gem for performance purpose.
-
 # Typecasting
 
 Tag Type  | Ruby Class
@@ -52,6 +44,14 @@ LONG      | Integer
 RATIONAL  | Rational
 SHORT     | Integer
 UNDEFINED | String
+
+# How fast?
+
+**It's approximately hundreds of times faster than mini_exiftool and exifr.**
+
+There are similar excellent works like [exifr](https://github.com/remvee/exifr) (by [@remvee](https://github.com/remvee)), and [mini_exiftool](https://github.com/janfri/mini_exiftool) (by [@janfri](https://github.com/janfri)). They are both built in pure Ruby while this one is C extension.
+
+If you are using JRuby, you might want to take exifr or mini_exiftool a look, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) which is written by Phil Harvey since it is a command-line wrapper, otherwise, you can try this gem for performance purpose.
 
 # Benchmark
 
