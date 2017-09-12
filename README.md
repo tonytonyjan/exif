@@ -1,10 +1,10 @@
-Ruby EXIF reader written in C extension. [![Build Status](https://travis-ci.org/tonytonyjan/exif.svg?branch=master)](https://travis-ci.org/tonytonyjan/exif)
+A Ruby EXIF reader written in C. [![Build Status](https://travis-ci.org/tonytonyjan/exif.svg?branch=master)](https://travis-ci.org/tonytonyjan/exif)
 
-# Installation
+Installation
 
     $ gem install exif
 
-Please make sure you have installed `libexif` first:
+Please make sure you have installed `libexif`:
 
     $ brew install libexif             # Homebrew
     $ sudo apt-get install libexif-dev # APT
@@ -13,49 +13,85 @@ Please make sure you have installed `libexif` first:
 # Usage
 
 ```ruby
-data = Exif::Data.new('sample.jpg')
+data = Exif::Data.new(IO.read('sample.jpg'))   # load from string
+data = Exif::Data.new(File.open('sample.jpg')) # load from file
 data.model         # => "NIKON D600"
 data.image_width   # => 4000
-data.gps_longitude # => 121.51246
-data.date_time     # => 2013-12-08 21:14:11 0800
+data.gps_longitude # => [(121/1), (76869/2500), (0/1)]
+data.date_time     # => "2013:12:08 21:14:11"
 
 # get all entries in an IFD
-data[0]                 # => {image_width: 4000, image_length: 2670, ...}
-data[1]                 # => {x_resolution: "72", y_resolution: "72", ...}
-data[:exif]             # => exposure_time: "1/125 sec.", f_number: "f/8.0"}
-data[:gps]              # => {gps_version_id: "2.2.0.0", gps_latitude_ref: "N", ...}
+data[:ifd0]             # => {image_width: 4000, image_length: 2670, ...}
+data[:ifd1]             # => {x_resolution: (72/1), y_resolution: (72/1), ...}
+data[:exif]             # => exposure_time: (1/125), fnumber: (8/1)}
+data[:gps]              # => {gps_version_id: [2, 2, 0, 0], gps_latitude_ref: "N", ...}
 data[:interoperability] # => {...}
-data.to_h               # => {0 => {...}, 1 => {...}, :exif => {...}}
+data.to_h               # => {:ifd0 => {...}, :ifd1 => {...}, :exif => {...}}
+data.ifds == data.to_h  # => true
 ```
+
+Since `ifd0` and `ifd1` share the same domain of tags, sometimes the same tag can be both used inside them, in this case, calling top-level API like `Exif::Data#image_width` will return the value of `ifd0`, in other words, `ifd0` has higher priority than `ifd1`.
 
 # How fast?
 
-**It's approximately 4 times faster than exifr and hundreds of times faster than mini_exiftool.**
+**It's approximately hundreds of times faster than mini_exiftool and exifr.**
 
-There are similar excellent works called [exifr](https://github.com/remvee/exifr) by [@remvee](https://github.com/remvee), and [mini_exiftool](https://github.com/janfri/mini_exiftool) by [@janfri](https://github.com/janfri). They're built in pure Ruby while this one is C extension.
+There are similar excellent works like [exifr](https://github.com/remvee/exifr) (by [@remvee](https://github.com/remvee)), and [mini_exiftool](https://github.com/janfri/mini_exiftool) (by [@janfri](https://github.com/janfri)). They are both built in pure Ruby while this one is C extension.
 
-If you are using JRuby, you might want to take exifr or mini_exiftool a look, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) written by Phil Harvey since it's a command-line wrapper, otherwise you can try this gem for performance purpose.
+If you are using JRuby, you might want to take exifr or mini_exiftool a look, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) which is written by Phil Harvey since it is a command-line wrapper, otherwise, you can try this gem for performance purpose.
 
-Below is [the benchmark](benchmark/benchmark.rb):
+# Typecasting
+
+Tag Type  | Ruby Class
+----------|----------
+ASCII     | String
+BYTE      | Integer
+DOUBLE    | Flat
+FLOAT     | Float
+LONG      | Integer
+RATIONAL  | Rational
+SHORT     | Integer
+UNDEFINED | String
+
+# Benchmark
+
+You can find all benchmark files in [/benchmark](benchmark):
 
 ```
-$ ruby benchmark/benchmark.rb
+$ ruby benchmark/load_file.rb
 Rehearsal ---------------------------------------------------------
-mini_exiftool (2.8.2)   0.130000   0.070000   9.430000 (  9.683178)
-exifr (1.3.2)           0.070000   0.010000   0.080000 (  0.075245)
-exif (595c354)          0.020000   0.000000   0.020000 (  0.018962)
------------------------------------------------- total: 9.530000sec
+mini_exiftool (2.8.2)   0.110000   0.050000  10.330000 ( 10.601087)
+exifr (1.3.2)           0.040000   0.000000   0.040000 (  0.045283)
+exif (52876a1)          0.010000   0.010000   0.020000 (  0.018207)
+----------------------------------------------- total: 10.390000sec
 
                             user     system      total        real
-mini_exiftool (2.8.2)   0.130000   0.070000   9.730000 (  9.991273)
-exifr (1.3.2)           0.070000   0.010000   0.080000 (  0.072604)
-exif (595c354)          0.010000   0.000000   0.010000 (  0.020044)
+mini_exiftool (2.8.2)   0.100000   0.060000   9.990000 ( 10.256508)
+exifr (1.3.2)           0.040000   0.000000   0.040000 (  0.043715)
+exif (52876a1)          0.010000   0.000000   0.010000 (  0.015512)
 -----------------------------------------
-498 times faster than mini_exiftool (2.8.2)
-4 times faster than exifr (1.3.2)
+661 times faster than mini_exiftool (2.8.2)
+3 times faster than exifr (1.3.2)
 ```
 
-## Tag Rreference
+```
+$ ruby benchmark/read_tag.rb
+Rehearsal ---------------------------------------------------------
+mini_exiftool (2.8.2)   0.340000   0.000000   0.340000 (  0.348095)
+exifr (1.3.2)           1.040000   0.030000   1.070000 (  1.068047)
+exif (52876a1)          0.010000   0.000000   0.010000 (  0.006440)
+------------------------------------------------ total: 1.420000sec
+
+                            user     system      total        real
+mini_exiftool (2.8.2)   0.320000   0.000000   0.320000 (  0.321061)
+exifr (1.3.2)           1.100000   0.010000   1.110000 (  1.115179)
+exif (52876a1)          0.000000   0.000000   0.000000 (  0.006496)
+-----------------------------------------
+49 times faster than mini_exiftool (2.8.2)
+172 times faster than exifr (1.3.2)
+```
+
+## Tag Reference
 
 - aperture_value
 - artist
@@ -208,5 +244,4 @@ exif (595c354)          0.010000   0.000000   0.010000 (  0.020044)
 
 # TODO
 
-1. Support reading from String.
-2. Create, update and delete tags.
+1. Create, update and delete tags.
