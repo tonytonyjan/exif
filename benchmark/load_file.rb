@@ -13,7 +13,7 @@ benchmark = Benchmark.bmbm do |x|
     n.times { EXIFR::JPEG.new(file_path).width }
   end
   x.report "exif (#{`git rev-parse --short HEAD`.chop!})" do
-    n.times { Exif::Data.new(File.open(file_path)).image_width }
+    n.times { Exif::Data.new(IO.read(file_path)).image_width }
   end
 end
 
