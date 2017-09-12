@@ -1,5 +1,5 @@
 <a name=""></a>
-# [2.0.0](https://github.com/tonytonyjan/exif/compare/v1.0.1...v) (2017-09-12)
+# [2.0.0](https://github.com/tonytonyjan/exif/compare/v1.0.1...v2.0.0) (2017-09-12)
 
 
 ### Bug Fixes
