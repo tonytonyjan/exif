@@ -16,3 +16,7 @@ spec = Gem::Specification.load(File.expand_path('..//exif.gemspec', __FILE__))
 Gem::PackageTask.new(spec).define
 
 task default: [:compile, :test]
+
+file 'CHANGELOG.md' do
+  system 'conventional-changelog -p angular -i CHANGELOG.md -s'
+end
