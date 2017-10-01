@@ -109,7 +109,6 @@ static VALUE exif_entry_to_rb_value(ExifEntry *entry){
   VALUE ret;
   size_t len, i;
   unsigned char size;
-  struct tm tm = {};
 
   data = entry->parent->parent;
   order = exif_data_get_byte_order(data);
