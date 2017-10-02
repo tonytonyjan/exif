@@ -1,4 +1,15 @@
-<a name=""></a>
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/tonytonyjan/exif/compare/v2.0.0...v2.0.1) (2017-10-02)
+
+
+### Bug Fixes
+
+* handle negative infinity ([51dc679](https://github.com/tonytonyjan/exif/commit/51dc679))
+* handle zero denominator ([b927674](https://github.com/tonytonyjan/exif/commit/b927674))
+
+
+
+<a name="2.0.0"></a>
 # [2.0.0](https://github.com/tonytonyjan/exif/compare/v1.0.1...v2.0.0) (2017-09-12)
 
 
