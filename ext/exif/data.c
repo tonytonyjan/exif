@@ -253,6 +253,23 @@ static void each_entry(ExifEntry *entry, void *self_ptr) {
   }
 }
 
+#define TYPECAST(value1, value2)                                               \
+  do {                                                                         \
+    if (entry->components > 1) {                                               \
+      ret = rb_ary_new2(entry->components);                                    \
+      for (i = 0; i < entry->components; i++)                                  \
+        rb_ary_push(ret, value1);                                              \
+    } else                                                                     \
+      ret = value2;                                                            \
+  } while (0)
+
+#define TYPECAST_BYTE(c_to_rb, type)                                           \
+  TYPECAST(c_to_rb((type)entry->data[i]), c_to_rb((type)entry->data[0]))
+
+#define TYPECAST_EXIF(c_to_rb, exif_get)                                       \
+  TYPECAST(c_to_rb(exif_get_##exif_get(entry->data + i * size, order)),        \
+           c_to_rb(exif_get_##exif_get(entry->data, order)))
+
 static VALUE exif_entry_to_rb_value(ExifEntry *entry) {
   ExifData *data;
   ExifByteOrder order;
@@ -272,82 +289,30 @@ static VALUE exif_entry_to_rb_value(ExifEntry *entry) {
     ret = rb_str_new((const char *)entry->data, entry->size);
     break;
   case EXIF_FORMAT_BYTE:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (i = 0; i < entry->components; i++)
-        rb_ary_push(ret, INT2FIX((uint8_t)entry->data[i]));
-    } else
-      ret = INT2FIX((uint8_t)entry->data[0]);
+    TYPECAST_BYTE(INT2FIX, uint8_t);
   case EXIF_FORMAT_SBYTE:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (i = 0; i < entry->components; i++)
-        rb_ary_push(ret, INT2FIX((int8_t)entry->data[i]));
-    } else
-      ret = INT2FIX((int8_t)entry->data[0]);
+    TYPECAST_BYTE(INT2FIX, int8_t);
     break;
   case EXIF_FORMAT_SHORT:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (i = 0; i < entry->components; i++)
-        rb_ary_push(ret,
-                    INT2FIX(exif_get_short(entry->data + i * size, order)));
-    } else
-      ret = INT2FIX(exif_get_short(entry->data, order));
+    TYPECAST_EXIF(INT2FIX, short);
     break;
   case EXIF_FORMAT_SSHORT:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (i = 0; i < entry->components; i++)
-        rb_ary_push(ret,
-                    INT2FIX(exif_get_sshort(entry->data + i * size, order)));
-    } else
-      ret = INT2FIX(exif_get_sshort(entry->data, order));
+    TYPECAST_EXIF(INT2FIX, sshort);
     break;
   case EXIF_FORMAT_LONG:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (i = 0; i < entry->components; i++)
-        rb_ary_push(ret,
-                    ULONG2NUM(exif_get_long(entry->data + i * size, order)));
-    } else
-      ret = ULONG2NUM(exif_get_long(entry->data, order));
+    TYPECAST_EXIF(ULONG2NUM, long);
     break;
   case EXIF_FORMAT_SLONG:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (i = 0; i < entry->components; i++)
-        rb_ary_push(ret,
-                    LONG2NUM(exif_get_slong(entry->data + i * size, order)));
-    } else
-      ret = LONG2NUM(exif_get_slong(entry->data, order));
+    TYPECAST_EXIF(LONG2NUM, slong);
     break;
   case EXIF_FORMAT_ASCII:
     ret = rb_str_new2((const char *)entry->data);
     break;
   case EXIF_FORMAT_RATIONAL:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (i = 0; i < entry->components; i++) {
-        rational = exif_get_rational(entry->data + i * size, order);
-        rb_ary_push(ret, rational_to_num(rational));
-      }
-    } else {
-      rational = exif_get_rational(entry->data, order);
-      ret = rational_to_num(rational);
-    }
+    TYPECAST_EXIF(rational_to_num, rational);
     break;
   case EXIF_FORMAT_SRATIONAL:
-    if (entry->components > 1) {
-      ret = rb_ary_new2(entry->components);
-      for (int i = 0; i < entry->components; i++) {
-        srational = exif_get_srational(entry->data + i * size, order);
-        rb_ary_push(ret, srational_to_num(srational));
-      }
-    } else {
-      srational = exif_get_srational(entry->data, order);
-      ret = srational_to_num(srational);
-    }
+    TYPECAST_EXIF(srational_to_num, srational);
     break;
   case EXIF_FORMAT_DOUBLE:
   case EXIF_FORMAT_FLOAT:
@@ -357,6 +322,10 @@ static VALUE exif_entry_to_rb_value(ExifEntry *entry) {
 
   return ret;
 }
+
+#undef TYPECAST
+#undef TYPECAST_BYTE
+#undef TYPECAST_EXIF
 
 VALUE rational_to_num(ExifRational rational) {
   if (rational.numerator == 0 && rational.denominator == 0)
