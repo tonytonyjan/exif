@@ -1,5 +1,4 @@
 #include "data.h"
-#include "libjpeg/jpeg-data.h"
 #include "ruby.h"
 
 #include <libexif/exif-data.h>
