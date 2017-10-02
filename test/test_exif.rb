@@ -197,7 +197,7 @@ class TestExif < Minitest::Test
     include Shared
 
     def data
-      @data ||= Exif::Data.new(IO.read(File.expand_path('../sample.jpg', __FILE__), mode: 'rb'))
+      @data ||= Exif::Data.new(IO.read(File.expand_path('../images/sample.jpg', __FILE__), mode: 'rb'))
     end
   end
 
@@ -205,14 +205,14 @@ class TestExif < Minitest::Test
     include Shared
 
     def data
-      @data ||= Exif::Data.new(File.open(File.expand_path('../sample.jpg', __FILE__)))
+      @data ||= Exif::Data.new(File.open(File.expand_path('../images/sample.jpg', __FILE__)))
     end
   end
 
   def test_not_readble
     assert_raises(Exif::NotReadble) { Exif::Data.new 'not readable' }
     assert_raises Exif::NotReadble do
-      Exif::Data.new(File.open(File.expand_path('../not_readable.jpg', __FILE__)))
+      Exif::Data.new(File.open(File.expand_path('../images/not_readable.jpg', __FILE__)))
     end
   end
 
@@ -223,12 +223,12 @@ class TestExif < Minitest::Test
   end
 
   def test_nan
-    data = Exif::Data.new(IO.read(File.expand_path('../nan.jpg', __FILE__)))
+    data = Exif::Data.new(IO.read(File.expand_path('../images/nan.jpg', __FILE__)))
     assert data.exposure_index.nan?
   end
 
   def test_infinity
-    data = Exif::Data.new(IO.read(File.expand_path('../infinity.jpg', __FILE__)))
+    data = Exif::Data.new(IO.read(File.expand_path('../images/infinity.jpg', __FILE__)))
     assert_equal Float::INFINITY, data.exposure_index
     assert_equal -Float::INFINITY, data.exposure_bias_value
   end
