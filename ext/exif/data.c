@@ -211,7 +211,7 @@ VALUE srational_to_num(ExifSRational srational){
   if(srational.numerator == 0 && srational.denominator == 0)
     return DBL2NUM(NAN);
   else if(srational.denominator == 0)
-    return DBL2NUM(INFINITY);
+    return DBL2NUM(srational.numerator > 0 ? INFINITY : -INFINITY);
   else
     return rb_rational_new(LONG2NUM(srational.numerator), LONG2NUM(srational.denominator));
 }

@@ -230,5 +230,6 @@ class TestExif < Minitest::Test
   def test_infinity
     data = Exif::Data.new(IO.read(File.expand_path('../infinity.jpg', __FILE__)))
     assert_equal Float::INFINITY, data.exposure_index
+    assert_equal -Float::INFINITY, data.exposure_bias_value
   end
 end
