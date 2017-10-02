@@ -20,6 +20,8 @@ static VALUE brackets(VALUE self, VALUE ifd_symbol);
 static void each_content(ExifContent *ec, void *user_data);
 static void each_entry(ExifEntry *, void *user_data);
 static VALUE exif_entry_to_rb_value(ExifEntry *);
+static VALUE rational_to_num(ExifRational rational);
+static VALUE srational_to_num(ExifSRational srational);
 
 void init_data(){
   int length;
@@ -168,11 +170,11 @@ static VALUE exif_entry_to_rb_value(ExifEntry *entry){
       ret = rb_ary_new2(entry->components);
       for(i = 0; i < entry->components; i++){
         rational = exif_get_rational(entry->data + i * size, order);
-        rb_ary_push(ret, rb_rational_new(ULONG2NUM(rational.numerator), ULONG2NUM(rational.denominator)));
+        rb_ary_push(ret, rational_to_num(rational));
       }
     } else {
       rational = exif_get_rational(entry->data, order);
-      ret = rb_rational_new(ULONG2NUM(rational.numerator), ULONG2NUM(rational.denominator));
+      ret = rational_to_num(rational);
     }
     break;
   case EXIF_FORMAT_SRATIONAL:
@@ -180,11 +182,11 @@ static VALUE exif_entry_to_rb_value(ExifEntry *entry){
       ret = rb_ary_new2(entry->components);
       for(int i = 0; i < entry->components; i++){
         srational = exif_get_srational(entry->data + i * size, order);
-        rb_ary_push(ret, rb_rational_new(LONG2FIX(srational.numerator), LONG2FIX(srational.denominator)));
+        rb_ary_push(ret, srational_to_num(srational));
       }
     } else {
       srational = exif_get_srational(entry->data, order);
-      ret = rb_rational_new(LONG2FIX(srational.numerator), LONG2FIX(srational.denominator));
+      ret = srational_to_num(srational);
     }
     break;
   case EXIF_FORMAT_DOUBLE:
@@ -194,4 +196,22 @@ static VALUE exif_entry_to_rb_value(ExifEntry *entry){
   }
 
   return ret;
+}
+
+VALUE rational_to_num(ExifRational rational){
+  if(rational.numerator == 0 && rational.denominator == 0)
+    return DBL2NUM(NAN);
+  else if(rational.denominator == 0)
+    return DBL2NUM(INFINITY);
+  else
+    return rb_rational_new(ULONG2NUM(rational.numerator), ULONG2NUM(rational.denominator));
+}
+
+VALUE srational_to_num(ExifSRational srational){
+  if(srational.numerator == 0 && srational.denominator == 0)
+    return DBL2NUM(NAN);
+  else if(srational.denominator == 0)
+    return DBL2NUM(INFINITY);
+  else
+    return rb_rational_new(LONG2NUM(srational.numerator), LONG2NUM(srational.denominator));
 }

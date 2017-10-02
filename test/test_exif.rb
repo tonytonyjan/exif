@@ -221,4 +221,14 @@ class TestExif < Minitest::Test
       Exif::Data.new(123)
     end
   end
+
+  def test_nan
+    data = Exif::Data.new(IO.read(File.expand_path('../nan.jpg', __FILE__)))
+    assert data.exposure_index.nan?
+  end
+
+  def test_infinity
+    data = Exif::Data.new(IO.read(File.expand_path('../infinity.jpg', __FILE__)))
+    assert_equal Float::INFINITY, data.exposure_index
+  end
 end
