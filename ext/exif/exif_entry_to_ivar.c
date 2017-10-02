@@ -1,15 +1,16 @@
 #include <libexif/exif-entry.h>
 
-const char* exif_entry_to_ivar(ExifEntry* ee){
+const char *exif_entry_to_ivar(ExifEntry *ee) {
   ExifIfd ifd;
   ExifTag tag;
 
   ifd = exif_entry_get_ifd(ee);
   tag = ee->tag;
 
-  switch((int)tag){
+  switch ((int)tag) {
   case EXIF_TAG_INTEROPERABILITY_INDEX: /* EXIF_TAG_GPS_LATITUDE_REF */
-    return ifd == EXIF_IFD_GPS ? "@gps_latitude_ref" : "@interoperability_index";
+    return ifd == EXIF_IFD_GPS ? "@gps_latitude_ref"
+                               : "@interoperability_index";
     break;
   case EXIF_TAG_INTEROPERABILITY_VERSION: /* EXIF_TAG_GPS_LATITUDE */
     return ifd == EXIF_IFD_GPS ? "@gps_latitude" : "@interoperability_version";
