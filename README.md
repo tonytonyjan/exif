@@ -30,7 +30,7 @@ data.to_h               # => {:ifd0 => {...}, :ifd1 => {...}, :exif => {...}}
 data.ifds == data.to_h  # => true
 ```
 
-Since `ifd0` and `ifd1` share the same domain of tags, sometimes the same tag can be both used inside them, in this case, calling top-level API like `Exif::Data#image_width` will return the value of `ifd0`, in other words, `ifd0` has higher priority than `ifd1`.
+`ifd0` takes precedence over `ifd1`, since `ifd0` and `ifd1` share the same domain of tags, sometimes the same tag can be both used inside them, in this case, calling top-level API like `Exif::Data#image_width` will return the value of `ifd0`.
 
 # Typecasting
 
