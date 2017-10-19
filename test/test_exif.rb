@@ -209,10 +209,16 @@ class TestExif < Minitest::Test
     end
   end
 
-  def test_not_readble
-    assert_raises(Exif::NotReadble) { Exif::Data.new 'not readable' }
-    assert_raises Exif::NotReadble do
+  def test_not_readable
+    assert_raises(Exif::NotReadable) { Exif::Data.new 'not readable' }
+    assert_raises Exif::NotReadable do
       Exif::Data.new(File.open(File.expand_path('../images/not_readable.jpg', __FILE__)))
+    end
+  end
+
+  def test_depreacted_not_readble
+    assert_output(nil, /NotReadble is deprecated/) do
+      assert_equal Exif::NotReadable, Exif::NotReadble
     end
   end
 

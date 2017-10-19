@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <time.h>
 
-extern VALUE rb_mExif, rb_eNotReadble, rb_eIFDNotFound;
+extern VALUE rb_mExif, rb_eNotReadable, rb_eIFDNotFound;
 extern const char *exif_entry_to_ivar(ExifEntry *entry);
 
 VALUE rb_cExifData;
@@ -206,7 +206,7 @@ VALUE new (VALUE self, VALUE input) {
   ed = exif_loader_get_data(loader);
   exif_loader_unref(loader);
   if (!ed)
-    rb_raise(rb_eNotReadble, "File not readable or no EXIF data in file.");
+    rb_raise(rb_eNotReadable, "File not readable or no EXIF data in file.");
 
   VALUE rb_data = Data_Wrap_Struct(self, NULL, exif_data_free, ed);
   rb_iv_set(rb_data, "@ifds", rb_hash_new());
