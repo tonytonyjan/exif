@@ -1,3 +1,15 @@
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/tonytonyjan/exif/compare/v2.0.1...v2.1.0) (2017-10-20)
+
+
+### Features
+
+* support objects which has `#read` implemented ([641a42a](https://github.com/tonytonyjan/exif/commit/641a42a)), closes [#13](https://github.com/tonytonyjan/exif/issues/13)
+
+### Deprecations
+
+* `Exif::NotReadble` is renamed to `Exif::NotReadable` and will be removed in the next release.
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/tonytonyjan/exif/compare/v2.0.0...v2.0.1) (2017-10-02)
 
