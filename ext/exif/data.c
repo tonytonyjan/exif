@@ -188,17 +188,13 @@ VALUE new (VALUE self, VALUE input) {
   ExifData *ed;
   VALUE read_data;
 
-  switch (TYPE(input)) {
-  case T_STRING:
+  if (TYPE(input) == T_STRING)
     read_data = input;
-    break;
-  case T_FILE:
+  else if (rb_respond_to(input, rb_intern("read")))
     read_data = rb_funcall(input, rb_intern("read"), 0);
-    break;
-  default:
+  else
     rb_raise(rb_eTypeError, "wrong argument type %s (expected String or IO)",
              rb_obj_classname(input));
-  }
 
   ExifLoader *loader = exif_loader_new();
   exif_loader_write(loader, (unsigned char *)RSTRING_PTR(read_data),

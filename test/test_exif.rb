@@ -209,6 +209,26 @@ class TestExif < Minitest::Test
     end
   end
 
+  class TestLoadFromStringIO < Minitest::Test
+    include Shared
+
+    def data
+      str = StringIO.new(IO.read(File.expand_path('../images/sample.jpg', __FILE__), mode: 'rb'))
+      @data ||= Exif::Data.new(str)
+    end
+  end
+
+  class TestLoadFromTempfil < Minitest::Test
+    include Shared
+
+    def data
+      tmpfile = Tempfile.new('foo')
+      tmpfile.write(IO.read(File.expand_path('../images/sample.jpg', __FILE__), mode: 'rb'))
+      tmpfile.rewind
+      @data ||= Exif::Data.new(tmpfile)
+    end
+  end
+
   def test_not_readable
     assert_raises(Exif::NotReadable) { Exif::Data.new 'not readable' }
     assert_raises Exif::NotReadable do
