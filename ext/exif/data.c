@@ -186,19 +186,26 @@ void init_data() {
 
 VALUE new (VALUE self, VALUE input) {
   ExifData *ed;
-  VALUE read_data;
 
-  if (TYPE(input) == T_STRING)
-    read_data = input;
-  else if (rb_respond_to(input, rb_intern("read")))
-    read_data = rb_funcall(input, rb_intern("read"), 0);
-  else
+  if (TYPE(input) != T_STRING && !rb_respond_to(input, rb_intern("read")))
     rb_raise(rb_eTypeError, "wrong argument type %s (expected String or IO)",
              rb_obj_classname(input));
 
   ExifLoader *loader = exif_loader_new();
-  exif_loader_write(loader, (unsigned char *)RSTRING_PTR(read_data),
-                    RSTRING_LEN(read_data));
+  if (TYPE(input) == T_STRING)
+    exif_loader_write(loader, (unsigned char *)RSTRING_PTR(input),
+                      RSTRING_LEN(input));
+  else {
+    VALUE buffer;
+    while (1) {
+      buffer = rb_funcall(input, rb_intern("read"), 1, INT2FIX(1024));
+      if (TYPE(buffer) == T_NIL)
+        break;
+      if (!exif_loader_write(loader, (unsigned char *)RSTRING_PTR(buffer),
+                             RSTRING_LEN(buffer)))
+        break;
+    }
+  }
   ed = exif_loader_get_data(loader);
   exif_loader_unref(loader);
   if (!ed)
