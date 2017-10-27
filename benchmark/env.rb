@@ -12,7 +12,7 @@ def gem_name_with_version(gem)
   "#{gem} (#{Gem.loaded_specs[gem].version})"
 end
 
-def pirnt_comparison(benchmark)
+def print_comparison(benchmark)
   puts '-----------------------------------------'
   exif = benchmark.pop
   benchmark.each do |tms|
