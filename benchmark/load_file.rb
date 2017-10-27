@@ -9,6 +9,9 @@ benchmark = Benchmark.bmbm do |x|
   x.report gem_name_with_version('mini_exiftool') do
     n.times { MiniExiftool.new(file_path).image_width }
   end
+  x.report gem_name_with_version('exiftool') do
+    n.times { Exiftool.new(file_path)[:image_width] }
+  end
   x.report gem_name_with_version('exifr') do
     n.times { EXIFR::JPEG.new(file_path).width }
   end

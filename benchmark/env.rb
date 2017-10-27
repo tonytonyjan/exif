@@ -5,6 +5,7 @@ require 'benchmark'
 require 'bundler'
 Bundler.setup(:benchmark)
 require 'mini_exiftool'
+require 'exiftool'
 require 'exifr/jpeg'
 require 'exif'
 
