@@ -48,48 +48,56 @@ UNDEFINED | String
 
 # How fast?
 
-**It's approximately hundreds of times faster than mini_exiftool and exifr.**
+**It's hundreds of times faster than mini_exiftool or exiftool and several times faster than exifr.**
 
-There are similar excellent works like [exifr](https://github.com/remvee/exifr) (by [@remvee](https://github.com/remvee)), and [mini_exiftool](https://github.com/janfri/mini_exiftool) (by [@janfri](https://github.com/janfri)). They are both built in pure Ruby while this one is C extension.
+There are similar excellent gems like [exifr](https://github.com/remvee/exifr), [mini_exiftool](https://github.com/janfri/mini_exiftool) and [exiftool](https://github.com/mceachen/exiftool.rb) built in pure Ruby while this one is a C extension.
 
-If you are using JRuby, you might want to take exifr or mini_exiftool a look, the latter lets you get the full power of [Exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/) which is written by Phil Harvey since it is a command-line wrapper, otherwise, you can try this gem for performance purpose.
+If you are using JRuby you might want to give exifr, exiftool or mini_exiftool a look, the latter two are commandline wrappers for [ExifTool](http://www.sno.phy.queensu.ca/~phil/exiftool/) by Phil Harvey and support many file formats. The exiftool gem can process multiple files at once while mini_exiftool can modify or copy EXIF data.
 
 # Benchmark
 
 You can find all benchmark files in [/benchmark](benchmark):
 
+Read a single tag from 100 files.
 ```
 $ ruby benchmark/load_file.rb
 Rehearsal ---------------------------------------------------------
-mini_exiftool (2.8.2)   0.110000   0.050000  10.330000 ( 10.601087)
-exifr (1.3.2)           0.040000   0.000000   0.040000 (  0.045283)
-exif (52876a1)          0.010000   0.010000   0.020000 (  0.018207)
------------------------------------------------ total: 10.390000sec
+mini_exiftool (2.9.0)   0.240000   0.110000  22.830000 ( 23.275885)
+exiftool (1.2.0)        0.480000   0.130000  22.870000 ( 23.311755)
+exifr (1.3.2)           0.120000   0.010000   0.130000 (  0.139821)
+exif (49b6835)          0.020000   0.000000   0.020000 (  0.019927)
+----------------------------------------------- total: 45.850000sec
 
                             user     system      total        real
-mini_exiftool (2.8.2)   0.100000   0.060000   9.990000 ( 10.256508)
-exifr (1.3.2)           0.040000   0.000000   0.040000 (  0.043715)
-exif (52876a1)          0.010000   0.000000   0.010000 (  0.015512)
+mini_exiftool (2.9.0)   0.240000   0.120000  22.830000 ( 23.267355)
+exiftool (1.2.0)        0.490000   0.130000  23.190000 ( 23.678799)
+exifr (1.3.2)           0.120000   0.010000   0.130000 (  0.134572)
+exif (49b6835)          0.020000   0.000000   0.020000 (  0.018419)
 -----------------------------------------
-661 times faster than mini_exiftool (2.8.2)
-3 times faster than exifr (1.3.2)
+1263 times faster than mini_exiftool (2.9.0)
+1286 times faster than exiftool (1.2.0)
+7 times faster than exifr (1.3.2)
 ```
 
+Read many tags from the same file 1000 times.
 ```
 $ ruby benchmark/read_tag.rb
 Rehearsal ---------------------------------------------------------
-mini_exiftool (2.8.2)   0.340000   0.000000   0.340000 (  0.348095)
-exifr (1.3.2)           1.040000   0.030000   1.070000 (  1.068047)
-exif (52876a1)          0.010000   0.000000   0.010000 (  0.006440)
------------------------------------------------- total: 1.420000sec
+mini_exiftool (2.9.0)   0.390000   0.000000   0.390000 (  0.404067)
+exiftool (1.2.0)        0.030000   0.000000   0.030000 (  0.027073)
+exifr (1.3.2)           1.220000   0.020000   1.240000 (  1.268672)
+exif (49b6835)          0.010000   0.000000   0.010000 (  0.006862)
+------------------------------------------------ total: 1.670000sec
 
                             user     system      total        real
-mini_exiftool (2.8.2)   0.320000   0.000000   0.320000 (  0.321061)
-exifr (1.3.2)           1.100000   0.010000   1.110000 (  1.115179)
-exif (52876a1)          0.000000   0.000000   0.000000 (  0.006496)
+mini_exiftool (2.9.0)   0.410000   0.010000   0.420000 (  0.412627)
+exiftool (1.2.0)        0.030000   0.000000   0.030000 (  0.028518)
+exifr (1.3.2)           1.180000   0.010000   1.190000 (  1.203806)
+exif (49b6835)          0.010000   0.000000   0.010000 (  0.006925)
 -----------------------------------------
-49 times faster than mini_exiftool (2.8.2)
-172 times faster than exifr (1.3.2)
+60 times faster than mini_exiftool (2.9.0)
+4 times faster than exiftool (1.2.0)
+174 times faster than exifr (1.3.2)
 ```
 
 ## Tag Reference

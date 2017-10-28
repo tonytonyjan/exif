@@ -5,5 +5,6 @@ gemspec
 
 group :benchmark do
   gem 'mini_exiftool'
+  gem 'exiftool'
   gem 'exifr'
 end
