@@ -201,6 +201,17 @@ class TestExif < Minitest::Test
     end
   end
 
+  class TestLoadFromStringRaw < Minitest::Test
+    include Shared
+
+    def data
+      @data ||= File.open(File.expand_path('../images/sample.jpg', __FILE__), 'rb') do |f|
+        f.seek(6)
+        Exif::Data.new(f.read(6000))
+      end
+    end
+  end
+
   class TestLoadFromIO < Minitest::Test
     include Shared
 
@@ -231,6 +242,7 @@ class TestExif < Minitest::Test
 
   def test_not_readable
     assert_raises(Exif::NotReadable) { Exif::Data.new 'not readable' }
+    assert_raises(Exif::NotReadable) { Exif::Data.new "Exif\x00\x00not readable" }
     assert_raises Exif::NotReadable do
       Exif::Data.new(File.open(File.expand_path('../images/not_readable.jpg', __FILE__)))
     end
@@ -256,6 +268,6 @@ class TestExif < Minitest::Test
   def test_infinity
     data = Exif::Data.new(IO.read(File.expand_path('../images/infinity.jpg', __FILE__)))
     assert_equal Float::INFINITY, data.exposure_index
-    assert_equal -Float::INFINITY, data.exposure_bias_value
+    assert_equal (-Float::INFINITY), data.exposure_bias_value
   end
 end

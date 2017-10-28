@@ -1,6 +1,7 @@
 #include "data.h"
 #include "ruby.h"
 
+#include <libexif/exif-log.h>
 #include <libexif/exif-data.h>
 #include <libexif/exif-loader.h>
 #include <stdint.h>
@@ -171,6 +172,15 @@ static VALUE exif_entry_to_rb_value(ExifEntry *);
 static VALUE rational_to_num(ExifRational rational);
 static VALUE srational_to_num(ExifSRational srational);
 
+static void exif_corrupt_log_func(ExifLog *log, ExifLogCode code,
+                                  const char *domain, const char *format,
+                                  va_list args, void *data) {
+  if (code == EXIF_LOG_CODE_CORRUPT_DATA) {
+    unsigned int *corrupt = (unsigned int *)data;
+    *corrupt = 1;
+  }
+}
+
 void init_data() {
   int length;
 
@@ -191,11 +201,21 @@ VALUE new (VALUE self, VALUE input) {
     rb_raise(rb_eTypeError, "wrong argument type %s (expected String or IO)",
              rb_obj_classname(input));
 
-  ExifLoader *loader = exif_loader_new();
-  if (TYPE(input) == T_STRING)
-    exif_loader_write(loader, (unsigned char *)RSTRING_PTR(input),
-                      RSTRING_LEN(input));
-  else {
+  if (TYPE(input) == T_STRING) {
+    unsigned int corrupt = 0;
+    ExifLog *log = exif_log_new();
+    exif_log_set_func(log, exif_corrupt_log_func, (void *)&corrupt);
+    ed = exif_data_new();
+    exif_data_log(ed, log);
+    exif_data_load_data(ed, (unsigned char *)RSTRING_PTR(input),
+                        RSTRING_LEN(input));
+    exif_log_unref(log);
+    if (corrupt) {
+      exif_data_free(ed);
+      ed = NULL;
+    }
+  } else {
+    ExifLoader *loader = exif_loader_new();
     VALUE buffer;
     while (1) {
       buffer = rb_funcall(input, rb_intern("read"), 1, INT2FIX(1024));
@@ -205,9 +225,9 @@ VALUE new (VALUE self, VALUE input) {
                              RSTRING_LEN(buffer)))
         break;
     }
+    ed = exif_loader_get_data(loader);
+    exif_loader_unref(loader);
   }
-  ed = exif_loader_get_data(loader);
-  exif_loader_unref(loader);
   if (!ed)
     rb_raise(rb_eNotReadable, "File not readable or no EXIF data in file.");
 

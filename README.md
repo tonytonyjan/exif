@@ -14,6 +14,7 @@ Please make sure you have installed `libexif`:
 
 ```ruby
 data = Exif::Data.new(IO.read('sample.jpg'))   # load from string
+data = Exif::Data.new("Exif\x00\x00II...")     # load raw exif data
 data = Exif::Data.new(File.open('sample.jpg')) # load from file
 data.model         # => "NIKON D600"
 data.image_width   # => 4000
