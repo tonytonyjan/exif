@@ -100,7 +100,11 @@ exif (49b6835)          0.010000   0.000000   0.010000 (  0.006925)
 174 times faster than exifr (1.3.2)
 ```
 
-## Tag Reference
+# Contribution
+
+- Please follow [AngularJS git commit message conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.uyo6cb12dt6w).
+
+# Tag Reference
 
 - aperture_value
 - artist
