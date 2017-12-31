@@ -13,8 +13,8 @@ Gem::Specification.new do |spec|
   spec.license       = 'MIT'
   spec.files         = Dir['lib/**/*.rb', 'ext/**/*.{h,c}']
   spec.extensions    = ['ext/exif/extconf.rb']
-  spec.add_development_dependency 'bundler', '~> 1.15.4'
-  spec.add_development_dependency 'rake', '~> 12.0.0'
+  spec.add_development_dependency 'bundler', '~> 1.16.1'
+  spec.add_development_dependency 'rake', '~> 12.3.0'
   spec.add_development_dependency 'rake-compiler', '~> 1.0.4'
   spec.add_development_dependency 'minitest', '~> 5.10.3'
 end
