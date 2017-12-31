@@ -249,7 +249,6 @@ static VALUE brackets(VALUE self, VALUE ifd_symbol) {
 }
 
 static void each_content(ExifContent *ec, void *self_ptr) {
-  VALUE *self;
   ExifIfd ifd;
 
   ifd = exif_content_get_ifd(ec);
@@ -296,10 +295,8 @@ static void each_entry(ExifEntry *entry, void *self_ptr) {
 static VALUE exif_entry_to_rb_value(ExifEntry *entry) {
   ExifData *data;
   ExifByteOrder order;
-  ExifRational rational;
-  ExifSRational srational;
   VALUE ret;
-  size_t len, i;
+  size_t i;
   unsigned char size;
 
   data = entry->parent->parent;
