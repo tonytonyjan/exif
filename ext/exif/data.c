@@ -208,7 +208,7 @@ VALUE new (VALUE self, VALUE input) {
     ed = exif_data_new();
     exif_data_log(ed, log);
     exif_data_load_data(ed, (unsigned char *)RSTRING_PTR(input),
-                        RSTRING_LEN(input));
+                        (uint32_t)RSTRING_LEN(input));
     exif_log_unref(log);
     if (corrupt) {
       exif_data_free(ed);
@@ -222,7 +222,7 @@ VALUE new (VALUE self, VALUE input) {
       if (TYPE(buffer) == T_NIL)
         break;
       if (!exif_loader_write(loader, (unsigned char *)RSTRING_PTR(buffer),
-                             RSTRING_LEN(buffer)))
+                             (uint32_t)RSTRING_LEN(buffer)))
         break;
     }
     ed = exif_loader_get_data(loader);
