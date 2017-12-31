@@ -1,9 +1,9 @@
 #include "data.h"
 #include "ruby.h"
 
-#include <libexif/exif-log.h>
 #include <libexif/exif-data.h>
 #include <libexif/exif-loader.h>
+#include <libexif/exif-log.h>
 #include <stdint.h>
 #include <time.h>
 
