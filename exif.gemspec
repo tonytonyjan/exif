@@ -15,5 +15,5 @@ Gem::Specification.new do |spec|
   spec.extensions    = ['ext/exif/extconf.rb']
   spec.add_development_dependency 'rake', '>= 0.8.1'
   spec.add_development_dependency 'rake-compiler', '~> 1.0.4'
-  spec.add_development_dependency 'minitest', '~> 5.10.3'
+  spec.add_development_dependency 'minitest', '~> 5.11.3'
 end
