@@ -265,6 +265,12 @@ static void each_entry(ExifEntry *entry, void *self_ptr) {
 
   ivar_name = exif_entry_to_ivar(entry);
   value = exif_entry_to_rb_value(entry);
+
+  if (ivar_name == 0x00) {
+    rb_warning("Unsupported tag %x", entry->tag);
+    return;
+  }
+
   rb_hash_aset(rb_hash_aref(rb_iv_get(*(VALUE *)self_ptr, "@ifds"),
                             ID2SYM(rb_intern(
                                 ifd_name_mapping[exif_entry_get_ifd(entry)]))),
