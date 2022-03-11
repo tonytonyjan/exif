@@ -181,7 +181,7 @@ static void exif_corrupt_log_func(ExifLog *log, ExifLogCode code,
   }
 }
 
-void init_data() {
+void init_data(void) {
   int length;
 
   rb_cExifData = rb_define_class_under(rb_mExif, "Data", rb_cObject);
