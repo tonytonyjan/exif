@@ -447,6 +447,7 @@ const char *exif_entry_to_ivar(ExifEntry *ee) {
   case EXIF_TAG_GPS_DIFFERENTIAL:
     return "@gps_differential";
     break;
+  #ifdef LIBEXIF_0_6_22_OR_HIGHER
   case EXIF_TAG_BODY_SERIAL_NUMBER:
     return "@body_serial_number";
     break;
@@ -459,18 +460,6 @@ const char *exif_entry_to_ivar(ExifEntry *ee) {
   case EXIF_TAG_GPS_H_POSITIONING_ERROR:
     return "@gps_h_positioning_error";
     break;
-  case EXIF_TAG_IMAGE_DEPTH:
-    return "@image_depth";
-    break;
-  case EXIF_TAG_ISO_SPEED:
-    return "@iso_speed";
-    break;
-  case EXIF_TAG_ISO_SPEEDLatitudeYYY:
-    return "@iso_speedlatitudeyyy";
-    break;
-  case EXIF_TAG_ISO_SPEEDLatitudeZZZ:
-    return "@iso_speedlatitudezzz";
-    break;
   case EXIF_TAG_LENS_MAKE:
     return "@lens_make";
     break;
@@ -482,6 +471,26 @@ const char *exif_entry_to_ivar(ExifEntry *ee) {
     break;
   case EXIF_TAG_LENS_SPECIFICATION:
     return "@lens_specification";
+    break;
+  case EXIF_TAG_SOURCE_EXPOSURE_TIMES_OF_COMPOSITE_IMAGE:
+    return "@source_exposure_times_of_composite_image";
+    break;
+  case EXIF_TAG_SOURCE_IMAGE_NUMBER_OF_COMPOSITE_IMAGE:
+    return "@source_image_number_of_composite_image";
+    break;
+  #endif
+  #ifdef LIBEXIF_0_6_23_OR_HIGHER
+  case EXIF_TAG_IMAGE_DEPTH:
+    return "@image_depth";
+    break;
+  case EXIF_TAG_ISO_SPEED:
+    return "@iso_speed";
+    break;
+  case EXIF_TAG_ISO_SPEEDLatitudeYYY:
+    return "@iso_speedlatitudeyyy";
+    break;
+  case EXIF_TAG_ISO_SPEEDLatitudeZZZ:
+    return "@iso_speedlatitudezzz";
     break;
   case EXIF_TAG_OFFSET_TIME:
     return "@offset_time";
@@ -498,15 +507,10 @@ const char *exif_entry_to_ivar(ExifEntry *ee) {
   case EXIF_TAG_SENSITIVITY_TYPE:
     return "@sensitivity_type";
     break;
-  case EXIF_TAG_SOURCE_EXPOSURE_TIMES_OF_COMPOSITE_IMAGE:
-    return "@source_exposure_times_of_composite_image";
-    break;
-  case EXIF_TAG_SOURCE_IMAGE_NUMBER_OF_COMPOSITE_IMAGE:
-    return "@source_image_number_of_composite_image";
-    break;
   case EXIF_TAG_STANDARD_OUTPUT_SENSITIVITY:
     return "@standard_output_sensitivity";
     break;
+  #endif
   }
   return 0;
 }
