@@ -18,4 +18,7 @@ checking_for 'libexif >= 0.6.23' do
   end
 end
 
+libexif_version = pkg_config('libexif', 'modversion') || 'unknown'
+append_cflags("-D LIBEXIF_VERSION='\"#{libexif_version}\"'")
+
 create_makefile('exif/exif')
