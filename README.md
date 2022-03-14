@@ -1,4 +1,4 @@
-A Ruby EXIF reader written in C. [![Build Status](https://travis-ci.org/tonytonyjan/exif.svg?branch=master)](https://travis-ci.org/tonytonyjan/exif)
+A Ruby EXIF reader written in C. ![Build Status](https://github.com/tonytonyjan/exif/actions/workflows/ci.yml/badge.svg)
 
 # Installation
 
