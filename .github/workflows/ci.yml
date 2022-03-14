@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: rake test
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ['3.1', '3.0', '2.7']
+        libexif-version:
+          - system
+          - master
+          - libexif-0_6_21-release
+          - libexif-0_6_22-release
+          - libexif-0_6_23-release
+          - libexif-0_6_24-release
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install libexif from system
+        run: sudo apt-get install libexif-dev
+        if: ${{ matrix.libexif-version == 'system' }}
+      - name: Checkout libexif
+        uses: actions/checkout@v2
+        with:
+          repository: libexif/libexif
+          ref: ${{matrix.libexif-version}}
+          path: libexif
+        if: ${{ matrix.libexif-version != 'system' }}
+      - name: Set up libexif
+        run: |
+          sudo apt-get update
+          sudo apt-get remove libexif12 libexif-dev
+          sudo apt-get install autopoint gettext
+          cd libexif
+          autoreconf -i
+          ./configure --disable-docs --prefix=/usr
+          make -j $(nproc)
+          sudo make install
+        if: ${{ matrix.libexif-version != 'system' }}
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: Install dependencies
+        run: bundle install --jobs $(nproc)
+      - name: Run tests
+        run: bundle exec rake
