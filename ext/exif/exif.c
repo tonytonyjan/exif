@@ -24,5 +24,6 @@ void Init_exif(void) {
       rb_define_class_under(rb_mExif, "UnknownDataType", rb_eError);
   rb_define_singleton_method(rb_mExif, "const_missing", rb_exif_const_missing,
                              1);
+  rb_define_const(rb_mExif, "LIBEXIF_VERSION", rb_str_new2(LIBEXIF_VERSION));
   init_data();
 }

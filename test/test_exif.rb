@@ -41,7 +41,7 @@ class TestExif < Minitest::Test
         resolution_unit: 2
       }, data.ifds[:ifd1])
 
-      assert_equal({
+      expected_exif = {
         exposure_time: Rational(1, 125),
         fnumber: Rational(8, 1),
         exposure_program: 3,
@@ -81,16 +81,29 @@ class TestExif < Minitest::Test
         sharpness: 0,
         subject_distance_range: 0,
         flash_pix_version: '0100',
-        sensitivity_type: 2,
-        body_serial_number: '8011371',
-        lens_specification: [
-          Rational(24, 1),
-          Rational(70, 1),
-          Rational(14, 5),
-          Rational(14, 5)
-        ],
-        lens_model: '24.0-70.0 mm f/2.8'
-      }, data.ifds[:exif])
+      }
+
+      if Gem::Version.new(Exif::LIBEXIF_VERSION) >= Gem::Version.new('0.6.22')
+        expected_exif.merge!(
+          body_serial_number: '8011371',
+          lens_specification: [
+            Rational(24, 1),
+            Rational(70, 1),
+            Rational(14, 5),
+            Rational(14, 5)
+          ],
+          lens_model: '24.0-70.0 mm f/2.8',
+        )
+      end
+
+      if Gem::Version.new(Exif::LIBEXIF_VERSION) >= Gem::Version.new('0.6.23')
+        expected_exif.merge!(
+          sensitivity_type: 2,
+        )
+      end
+
+
+      assert_equal(expected_exif, data.ifds[:exif])
 
       assert_equal({
         gps_version_id: [2, 2, 0, 0],
