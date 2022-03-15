@@ -161,7 +161,27 @@ static const char *attr_readers[] = {"ifds",
                                      "y_resolution",
                                      "ycbcr_coefficients",
                                      "ycbcr_positioning",
-                                     "ycbcr_sub_sampling"};
+                                     "ycbcr_sub_sampling"
+                                     "body_serial_number",
+                                     "camera_owner_name",
+                                     "composite_image",
+                                     "gps_h_positioning_error",
+                                     "image_depth",
+                                     "iso_speed",
+                                     "iso_speedlatitudeyyy",
+                                     "iso_speedlatitudezzz",
+                                     "lens_make",
+                                     "lens_model",
+                                     "lens_serial_number",
+                                     "lens_specification",
+                                     "offset_time",
+                                     "offset_time_digitized",
+                                     "offset_time_original",
+                                     "recommended_exposure_index",
+                                     "sensitivity_type",
+                                     "source_exposure_times_of_composite_image",
+                                     "source_image_number_of_composite_image",
+                                     "standard_output_sensitivity"};
 
 static VALUE new (VALUE self, VALUE input);
 static VALUE dump(VALUE self);
