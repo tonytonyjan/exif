@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/tonytonyjan/exif/compare/v2.2.2...v2.2.3) (2022-03-11)
+
+### Bug Fixes
+
+- support all libexif versions since v0.6.21.
+
+
 ## [2.2.2](https://github.com/tonytonyjan/exif/compare/v2.2.1...v2.2.2) (2022-03-11)
 
 ### Features
