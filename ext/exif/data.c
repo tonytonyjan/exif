@@ -205,6 +205,7 @@ void init_data(void) {
   int length;
 
   rb_cExifData = rb_define_class_under(rb_mExif, "Data", rb_cObject);
+  rb_undef_alloc_func(rb_cExifData);
   length = sizeof(attr_readers) / sizeof(char *);
   for (int i = 0; i < length; ++i)
     rb_define_attr(rb_cExifData, attr_readers[i], 1, 0);
