@@ -16,4 +16,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '>= 0.8.1'
   spec.add_development_dependency 'rake-compiler', '~> 1.0.4'
   spec.add_development_dependency 'minitest', '~> 5.11.3'
+  spec.metadata['msys2_mingw_dependencies'] = 'libexif'
 end
